@@ -10,12 +10,23 @@ import { select } from './utils/user.select';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getAllUsers(): Promise<UserDto[] | any> {
+  async getAllUsers(): Promise<UserDto[]> {
     const users = await this.prisma.user.findMany({
       select,
     });
 
     return users;
+  }
+
+  async getUserById(id: string): Promise<UserDto> {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id,
+      },
+      select,
+    });
+
+    return user;
   }
 
   async createUser(userData: UserDto): Promise<UserDto> {
