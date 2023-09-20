@@ -8,7 +8,7 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import { Request, Response, response } from 'express';
+import { Request, Response } from 'express';
 import { UserDto } from './dto/user.dto';
 import { UserService } from './user.service';
 
@@ -22,6 +22,19 @@ export class UserController {
     const users = await this.userService.getAllUsers();
 
     return response.json(users);
+  }
+
+  @Get('/:id')
+  @HttpCode(HttpStatus.OK)
+  async getUser(
+    @Res() response: Response,
+    @Req() request: Request,
+  ): Promise<Response<UserDto>> {
+    const { id } = request.params;
+
+    const user = await this.userService.getUserById(id);
+
+    return response.json(user);
   }
 
   @Post()
