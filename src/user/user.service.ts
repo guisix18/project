@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserDto } from './dto/user.dto';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import * as bcrypt from 'bcrypt';
 import { select } from './utils/user.select';
@@ -26,6 +26,8 @@ export class UserService {
       select,
     });
 
+    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+
     return user;
   }
 
@@ -45,5 +47,20 @@ export class UserService {
       ...user,
       password: null,
     };
+  }
+
+  async updateUser(id: string, data: UserDto): Promise<UserDto> {
+    const userUpdated = await this.prisma.user.update({
+      where: {
+        id,
+      },
+      data,
+      select,
+    });
+
+    if (!userUpdated)
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+
+    return { ...userUpdated };
   }
 }
