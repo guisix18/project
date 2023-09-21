@@ -8,7 +8,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class UserDto {
+export class UserDTO {
   @IsNotEmpty()
   @IsString()
   @MinLength(1)
@@ -41,6 +41,7 @@ export class UserUpdateDTO {
   @IsEmail(undefined, { message: 'Email is not valid' })
   email: string;
 
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   @MinLength(8, { message: 'The password has to be greater or equal than 8' })
