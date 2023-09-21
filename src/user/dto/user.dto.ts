@@ -45,8 +45,4 @@ export class UserUpdateDTO {
   @IsNotEmpty()
   @MinLength(8, { message: 'The password has to be greater or equal than 8' })
   password: string;
-
-  @IsOptional()
-  @IsNotEmpty({ message: "The CPF field can't be empty" })
-  cpf: string;
 }
