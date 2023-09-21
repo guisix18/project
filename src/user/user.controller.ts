@@ -9,9 +9,10 @@ import {
   Res,
   Patch,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
-import { UserDto, UserUpdateDTO } from './dto/user.dto';
+import { Request, Response, response } from 'express';
+import { UserDTO, UserUpdateDTO } from './dto/user.dto';
 import { UserService } from './user.service';
+import { USER_DEACTIVATE, USER_UPDATED } from './utils/user.messages';
 
 @Controller('users')
 export class UserController {
@@ -19,10 +20,21 @@ export class UserController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async getAll(@Res() response: Response): Promise<Response<UserDto[]>> {
+  async getAll(@Res() response: Response): Promise<Response<UserDTO[]>> {
     const users = await this.userService.getAllUsers();
 
     return response.json(users);
+  }
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  async createUser(
+    @Res() response: Response,
+    @Body() data: UserDTO,
+  ): Promise<Response<UserDTO>> {
+    const createdUser = await this.userService.createUser(data);
+
+    return response.json(createdUser);
   }
 
   @Get('/:id')
@@ -30,23 +42,12 @@ export class UserController {
   async getUser(
     @Res() response: Response,
     @Req() request: Request,
-  ): Promise<Response<UserDto>> {
+  ): Promise<Response<UserDTO>> {
     const { id } = request.params;
 
     const user = await this.userService.getUserById(id);
 
     return response.json(user);
-  }
-
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  async createUser(
-    @Res() response: Response,
-    @Body() data: UserDto,
-  ): Promise<Response<UserDto>> {
-    const createdUser = await this.userService.createUser(data);
-
-    return response.json(createdUser);
   }
 
   @Patch('/:id')
@@ -60,8 +61,22 @@ export class UserController {
     const updatedUser = await this.userService.updateUser(id, data);
 
     return response.json({
-      message: 'User updated',
+      message: USER_UPDATED,
       updatedUser,
+    });
+  }
+
+  @Patch('/deactivate/:id')
+  @HttpCode(HttpStatus.OK)
+  async deactivateUser(
+    @Res() response: Response,
+    @Req() request: Request,
+  ): Promise<Response<void>> {
+    const { id } = request.params;
+    await this.userService.deactivateUser(id);
+
+    return response.json({
+      message: USER_DEACTIVATE,
     });
   }
 }

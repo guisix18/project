@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UserDto } from './dto/user.dto';
+import { UserDTO } from './dto/user.dto';
 import { Prisma, User } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import * as bcrypt from 'bcrypt';
@@ -10,7 +10,7 @@ import { select } from './utils/user.select';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getAllUsers(): Promise<UserDto[]> {
+  async getAllUsers(): Promise<UserDTO[]> {
     const users = await this.prisma.user.findMany({
       select,
     });
@@ -18,7 +18,7 @@ export class UserService {
     return users;
   }
 
-  async getUserById(id: string): Promise<UserDto> {
+  async getUserById(id: string): Promise<UserDTO> {
     const user = await this.prisma.user.findFirst({
       where: {
         id,
@@ -26,12 +26,10 @@ export class UserService {
       select,
     });
 
-    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-
     return user;
   }
 
-  async createUser(userData: UserDto): Promise<UserDto> {
+  async createUser(userData: UserDTO): Promise<UserDTO> {
     const data: Prisma.UserCreateInput = {
       id: randomUUID(),
       name: userData.name,
@@ -41,15 +39,13 @@ export class UserService {
 
     const user = await this.prisma.user.create({
       data,
+      select,
     });
 
-    return {
-      ...user,
-      password: null,
-    };
+    return user;
   }
 
-  async updateUser(id: string, data: UserDto): Promise<UserDto> {
+  async updateUser(id: string, data: UserDTO): Promise<UserDTO> {
     const userUpdated = await this.prisma.user.update({
       where: {
         id,
@@ -58,9 +54,19 @@ export class UserService {
       select,
     });
 
-    if (!userUpdated)
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    return userUpdated;
+  }
 
-    return { ...userUpdated };
+  async deactivateUser(id: string): Promise<void> {
+    await this.prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        isActive: false,
+      },
+    });
+
+    return;
   }
 }
