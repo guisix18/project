@@ -3,5 +3,6 @@ export const select = {
   name: true,
   email: true,
   tasks: true,
+  isActive: true,
   password: false,
 };

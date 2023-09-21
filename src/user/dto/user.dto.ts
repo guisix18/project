@@ -1,6 +1,7 @@
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   Matches,
   MaxLength,
@@ -29,4 +30,22 @@ export class UserDto {
   task?: [];
   //Depois de ter feito o DTO, bota como opcional mas em vez de um array vazio bota o DTO
   //TIPO TaskDto
+}
+
+export class UserUpdateDTO {
+  @IsOptional()
+  @IsNotEmpty({ message: "The name field can't be empty" })
+  name: string;
+
+  @IsOptional()
+  @IsEmail(undefined, { message: 'Email is not valid' })
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(8, { message: 'The password has to be greater or equal than 8' })
+  @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/, {
+    message: 'Password to weak',
+  })
+  password: string;
 }
