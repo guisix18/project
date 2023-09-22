@@ -1,14 +1,12 @@
 import {
-  IsDate,
   IsEnum,
-  IsInstance,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { Progress } from '../interface/task.interface';
-import { UserDTO } from 'src/user/dto/user.dto';
+import { TaskState } from '@prisma/client';
 
 export class TaskDTO {
   @IsNotEmpty()
@@ -23,15 +21,7 @@ export class TaskDTO {
   @MaxLength(500)
   description: string;
 
-  @IsDate()
-  createdAt?: Date;
-
-  @IsDate()
-  concluedAt?: Date;
-
-  @IsEnum(Progress)
-  progress?: Progress;
-
-  @IsInstance(UserDTO)
-  user?: UserDTO;
+  @IsOptional()
+  @IsEnum(TaskState)
+  progress?: TaskState;
 }
