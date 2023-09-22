@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { UserDTO } from 'src/user/dto/user.dto';
 import { UserService } from 'src/user/user.service';
 import { UserPayload } from './models/UserPayload';
-import { IUser } from 'src/user/entities/user.interface';
+import { IUser } from './interface/user.interface';
 import { JwtService } from '@nestjs/jwt';
 import { UserToken } from './models/UserToken';
 import { UnauthorizedError } from './errors/unhauthorized.error';
