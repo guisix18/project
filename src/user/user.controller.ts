@@ -13,11 +13,13 @@ import { Request, Response, response } from 'express';
 import { UserDTO, UserUpdateDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 import { USER_DEACTIVATE, USER_UPDATED } from './utils/user.messages';
+import { isPublic } from 'src/auth/decorators/is-public.decorator';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @isPublic()
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAll(@Res() response: Response): Promise<Response<UserDTO[]>> {
@@ -26,6 +28,7 @@ export class UserController {
     return response.json(users);
   }
 
+  @isPublic()
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createUser(
@@ -50,7 +53,7 @@ export class UserController {
     return response.json(user);
   }
 
-  @Patch('/:id')
+  @Patch('update/:id')
   @HttpCode(HttpStatus.ACCEPTED)
   async updateUser(
     @Res() response: Response,
