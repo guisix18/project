@@ -24,9 +24,9 @@ model Task {
   title String
   description String
   createdAt DateTime
-  concludedAt DateTime
+  concludedAt DateTime?
   progress TaskState @default(NOTSTARTED)
-  user User @relation(fields: [userId], references: [id])
+  user User? @relation(fields: [userId], references: [id])
   userId String @unique
 }
 
