@@ -45,6 +45,12 @@ export class UserService {
     return user;
   }
 
+  async findByEmail(email: string): Promise<UserDTO> {
+    return await this.prisma.user.findFirst({
+      where: { email },
+    });
+  }
+
   async updateUser(id: string, data: UserDTO): Promise<UserDTO> {
     const userUpdated = await this.prisma.user.update({
       where: {
