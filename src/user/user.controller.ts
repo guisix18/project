@@ -50,7 +50,7 @@ export class UserController {
     return response.json(user);
   }
 
-  @Patch('/:id')
+  @Patch('update/:id')
   @HttpCode(HttpStatus.ACCEPTED)
   async updateUser(
     @Res() response: Response,
