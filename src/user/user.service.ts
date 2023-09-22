@@ -1,11 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserDTO } from './dto/user.dto';
 import { Prisma, User } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import * as bcrypt from 'bcrypt';
 import { select } from './utils/user.select';
-import { USER_NOT_FOUND } from './utils/user.messages';
 
 @Injectable()
 export class UserService {
@@ -75,30 +74,5 @@ export class UserService {
     });
 
     return;
-  }
-
-  async findByEmail(email: string): Promise<UserDTO> {
-    const userByEmail = await this.prisma.user.findFirst({
-      where: { email },
-    });
-
-    if (!userByEmail)
-      throw new HttpException(USER_NOT_FOUND, HttpStatus.NOT_FOUND);
-
-    return userByEmail;
-  }
-
-  async findUserWithTask(id: string): Promise<UserDTO> {
-    const userByTask = await this.prisma.user.findFirst({
-      where: {
-        id,
-      },
-      select,
-    });
-
-    if (!userByTask)
-      throw new HttpException(USER_NOT_FOUND, HttpStatus.NOT_FOUND);
-
-    return userByTask;
   }
 }
