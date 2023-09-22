@@ -1,5 +1,0 @@
-export enum Progress {
-  INPROGRESS = 'INPROGRESS',
-  NOTSTARTED = 'NOTSTARTED',
-  CONCLUDED = 'CONCLUDED',
-}
