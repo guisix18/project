@@ -1,6 +1,6 @@
 import { Request } from 'express';
-import { UserDTO } from 'src/user/dto/user.dto';
+import { IUser } from 'src/user/entities/user.interface';
 
 export interface AuthRequest extends Request {
-  user: UserDTO;
+  user: IUser;
 }
