@@ -9,9 +9,16 @@ import { UserService } from './user.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { VerifyUserIdMiddleware } from './middleware/verifyUserId.middleware';
 import { VerifyUserEmailAvailability } from './middleware/verifyUserEmailAvailability';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [
+    PrismaModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET_NEW_PASS,
+      signOptions: { expiresIn: 400 },
+    }),
+  ],
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService],
