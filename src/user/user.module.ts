@@ -22,7 +22,7 @@ export class UserModule implements NestModule {
       .apply(VerifyUserIdMiddleware)
       .forRoutes(
         { path: 'users/:id', method: RequestMethod.GET },
-        { path: 'users/:id', method: RequestMethod.PATCH },
+        { path: 'users/update/:id', method: RequestMethod.PATCH },
         { path: 'users/deactivate/:id', method: RequestMethod.PATCH },
       );
 
