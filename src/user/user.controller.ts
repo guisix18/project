@@ -13,13 +13,13 @@ import { Request, Response, response } from 'express';
 import { UserDTO, UserUpdateDTO } from './dto/user.dto';
 import { UserService } from './user.service';
 import { USER_DEACTIVATE, USER_UPDATED } from './utils/user.messages';
-import { isPublic } from 'src/auth/decorators/is-public.decorator';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @isPublic()
+  @IsPublic()
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAll(@Res() response: Response): Promise<Response<UserDTO[]>> {
@@ -28,7 +28,7 @@ export class UserController {
     return response.json(users);
   }
 
-  @isPublic()
+  @IsPublic()
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createUser(
@@ -38,6 +38,15 @@ export class UserController {
     const createdUser = await this.userService.createUser(data);
 
     return response.json(createdUser);
+  }
+
+  @IsPublic()
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  async resetPassword(@Res() response: Response, @Body() email: string) {
+    const resetRequest = await this.userService.resetPassword(email);
+
+    return response.json(resetRequest);
   }
 
   @Get('/:id')
