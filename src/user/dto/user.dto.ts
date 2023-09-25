@@ -7,6 +7,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { TaskDTO } from 'src/tasks/dto/tasks.dto';
 
 export class UserDTO {
   @IsNotEmpty()
@@ -27,9 +28,7 @@ export class UserDTO {
   })
   password: string;
 
-  task?: [];
-  //Depois de ter feito o DTO, bota como opcional mas em vez de um array vazio bota o DTO
-  //TIPO TaskDto
+  task?: TaskDTO[];
 }
 
 export class UserUpdateDTO {
