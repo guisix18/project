@@ -22,6 +22,6 @@ export class TaskDTO {
   description: string;
 
   @IsOptional()
-  @IsEnum(TaskState)
+  @IsEnum(TaskState, { each: true })
   progress?: TaskState;
 }
