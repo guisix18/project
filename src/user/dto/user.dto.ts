@@ -1,5 +1,6 @@
 import {
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -27,6 +28,9 @@ export class UserDTO {
     message: 'Password to weak',
   })
   password: string;
+
+  @IsOptional()
+  resetToken?: string;
 
   task?: TaskDTO[];
 }
