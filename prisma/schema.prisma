@@ -17,6 +17,8 @@ model User {
   isActive Boolean @default(true)
   password String
   tasks Task[]
+  createdAt DateTime
+  updatedAt DateTime?
   resetToken String?
 }
 

@@ -8,6 +8,7 @@ import {
   Req,
   Res,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { Request, Response, response } from 'express';
 import { UserDTO, UserUpdateDTO } from './dto/user.dto';
@@ -41,12 +42,38 @@ export class UserController {
   }
 
   @IsPublic()
-  @Post('reset-password')
+  @Post('forget-password')
   @HttpCode(HttpStatus.OK)
-  async resetPassword(@Res() response: Response, @Body() email: string) {
-    const resetRequest = await this.userService.resetPassword(email);
+  async resetPassword(
+    @Res() response: Response,
+    @Req() request: Request,
+    @Body() data: Pick<UserDTO, 'email'>,
+  ): Promise<Response<string>> {
+    const { email } = data;
 
-    return response.json(resetRequest);
+    await this.userService.forgetPassword(request, email);
+
+    return response.json({
+      message: 'Email was sent to you',
+    });
+  }
+
+  @IsPublic()
+  @Post('new-password')
+  @HttpCode(HttpStatus.OK)
+  async newPassword(
+    @Res() response: Response,
+    @Body() data: Pick<UserDTO, 'password'>,
+    @Query('token') token: string,
+  ): Promise<Response<UserDTO>> {
+    const { password } = data;
+
+    const userWithNewPass = await this.userService.newPassword(token, password);
+
+    return response.json({
+      message: 'User password was been updated',
+      user: userWithNewPass,
+    });
   }
 
   @Get('/:id')

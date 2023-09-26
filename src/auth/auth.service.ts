@@ -16,6 +16,7 @@ export class AuthService {
 
   login(user: IUser): UserToken {
     const payload: UserPayload = {
+      id: user.id,
       sub: user.id,
       email: user.email,
       name: user.name,
