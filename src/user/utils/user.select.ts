@@ -5,4 +5,6 @@ export const select = {
   tasks: true,
   isActive: true,
   password: false,
+  createdAt: true,
+  updatedAt: true,
 };
