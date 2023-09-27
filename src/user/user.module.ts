@@ -7,8 +7,8 @@ import {
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
-import { VerifyUserIdMiddleware } from './middleware/verifyUserId.middleware';
-import { VerifyUserEmailAvailability } from './middleware/verifyUserEmailAvailability';
+import { VerifyUserIdMiddleware } from './middlewares/verifyUserId.middleware';
+import { VerifyUserEmailAvailability } from './middlewares/verifyUserEmailAvailability.middleware';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
