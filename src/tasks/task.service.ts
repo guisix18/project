@@ -43,4 +43,25 @@ export class TasksService {
 
     return tasks;
   }
+
+  async updateTaskState(state: TaskState, taskId: string): Promise<TaskDTO> {
+    const validate = Object.keys(TaskState).includes(state);
+
+    const task = await this.prisma.task.findFirst({
+      where: {
+        id: taskId,
+      },
+    });
+
+    const taskUpdated = await this.prisma.task.update({
+      where: {
+        id: taskId,
+      },
+      data: {
+        progress: validate ? state : task.progress,
+      },
+    });
+
+    return taskUpdated;
+  }
 }
