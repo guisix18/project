@@ -25,3 +25,23 @@ export class TaskDTO {
   @IsEnum(TaskState, { each: true })
   progress?: TaskState;
 }
+
+export class UpdateTaskDTO {
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(1)
+  @MaxLength(250)
+  title: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(1)
+  @MaxLength(500)
+  description: string;
+
+  @IsOptional()
+  @IsEnum(TaskState, { each: true })
+  progress?: TaskState;
+}
