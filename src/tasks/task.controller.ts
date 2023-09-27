@@ -8,6 +8,8 @@ import {
   HttpCode,
   HttpStatus,
   Query,
+  Param,
+  Patch,
 } from '@nestjs/common';
 import { TasksService } from './task.service';
 import { Request, Response } from 'express';
@@ -44,5 +46,17 @@ export class TaskController {
     const userTasks = await this.taskService.listUserTasks(id, query);
 
     return response.json(userTasks);
+  }
+
+  @Patch('/update/:taskId')
+  @HttpCode(HttpStatus.OK)
+  async updateTaskState(
+    @Query('progress') query: TaskState,
+    @Param('taskId') taskId: string,
+    @Res() response: Response,
+  ): Promise<Response<TaskDTO>> {
+    const taskUpdate = await this.taskService.updateTaskState(query, taskId);
+
+    return response.json(taskUpdate);
   }
 }

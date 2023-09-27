@@ -9,11 +9,17 @@ import {
   Res,
   Patch,
   Query,
+  Param,
 } from '@nestjs/common';
 import { Request, Response, response } from 'express';
 import { UserDTO, UserUpdateDTO } from './dto/user.dto';
 import { UserService } from './user.service';
-import { USER_DEACTIVATE, USER_UPDATED } from './utils/user.messages';
+import {
+  USER_DEACTIVATE,
+  USER_EMAIL_WAS_SENT,
+  USER_PASSWORD_UPDATED,
+  USER_UPDATED,
+} from './utils/user.messages';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
 @Controller('users')
@@ -54,7 +60,7 @@ export class UserController {
     await this.userService.forgetPassword(request, email);
 
     return response.json({
-      message: 'Email was sent to you',
+      message: USER_EMAIL_WAS_SENT,
     });
   }
 
@@ -71,7 +77,7 @@ export class UserController {
     const userWithNewPass = await this.userService.newPassword(token, password);
 
     return response.json({
-      message: 'User password was been updated',
+      message: USER_PASSWORD_UPDATED,
       user: userWithNewPass,
     });
   }
@@ -80,10 +86,8 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   async getUser(
     @Res() response: Response,
-    @Req() request: Request,
+    @Param('id') id: string,
   ): Promise<Response<UserDTO>> {
-    const { id } = request.params;
-
     const user = await this.userService.getUserById(id);
 
     return response.json(user);
@@ -93,10 +97,9 @@ export class UserController {
   @HttpCode(HttpStatus.ACCEPTED)
   async updateUser(
     @Res() response: Response,
-    @Req() request: Request,
+    @Param('id') id: string,
     @Body() data: UserUpdateDTO,
   ): Promise<Response<UserUpdateDTO>> {
-    const { id } = request.params;
     const updatedUser = await this.userService.updateUser(id, data);
 
     return response.json({
@@ -109,9 +112,8 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   async deactivateUser(
     @Res() response: Response,
-    @Req() request: Request,
-  ): Promise<Response<void>> {
-    const { id } = request.params;
+    @Param('id') id: string,
+  ): Promise<Response<string>> {
     await this.userService.deactivateUser(id);
 
     return response.json({
