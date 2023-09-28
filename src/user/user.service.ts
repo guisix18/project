@@ -176,9 +176,15 @@ export class UserService {
     try {
       const decodedToken = this.jwtService.verify(token);
 
+      const { id, exp } = decodedToken;
+
+      const now = Math.floor(Date.now() / 1000);
+
+      if (exp && exp < now) throw new HttpException(EXPIRED_TOKEN, 400);
+
       const user = await this.prisma.user.findFirst({
         where: {
-          id: decodedToken.id,
+          id,
           AND: {
             resetToken: token,
           },
