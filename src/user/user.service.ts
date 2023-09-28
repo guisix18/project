@@ -9,7 +9,14 @@ import { UserPayload } from 'src/auth/models/UserPayload';
 import { JwtService } from '@nestjs/jwt';
 import { urlGen } from './utils/user.urlgen';
 import { MailerService } from '@nestjs-modules/mailer';
-import { EXPIRED_TOKEN, USER_NOT_FOUND } from './utils/user.messages';
+import {
+  EMAIL_BUTTON_TEXT,
+  EMAIL_INSTRUCTIONS,
+  EMAIL_INTRO_SUBJECT,
+  EMAIL_OUTRO,
+  EXPIRED_TOKEN,
+  USER_NOT_FOUND,
+} from './utils/user.messages';
 import { Request } from 'express';
 import { Content } from 'mailgen';
 const Mailgen = require('mailgen');
@@ -103,17 +110,16 @@ export class UserService {
     const emailBody: Content = {
       body: {
         name: user.name,
-        intro: 'Reset your password',
+        intro: EMAIL_INTRO_SUBJECT,
         action: {
-          instructions:
-            'Para que seja possível o reset de senha, por favor, clique no botão abaixo e escreva sua nova senha',
+          instructions: EMAIL_INSTRUCTIONS,
           button: {
             color: '#0099FF',
-            text: 'Reset your password here',
+            text: EMAIL_BUTTON_TEXT,
             link: `${link}?token=${user.resetToken}`,
           },
         },
-        outro: 'Need help? Please, send me a email',
+        outro: EMAIL_OUTRO,
       },
     };
 
@@ -128,7 +134,7 @@ export class UserService {
     await this.mailer.sendMail({
       to: user.email,
       from: 'guisix16@gmail.com',
-      subject: 'Reset your password',
+      subject: EMAIL_INTRO_SUBJECT,
       html: htmlToBeSented,
     });
 
@@ -173,6 +179,9 @@ export class UserService {
       const user = await this.prisma.user.findFirst({
         where: {
           id: decodedToken.id,
+          AND: {
+            resetToken: token,
+          },
         },
       });
 
