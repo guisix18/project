@@ -10,10 +10,11 @@ import {
   Query,
   Param,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { TasksService } from './task.service';
-import { Request, Response } from 'express';
-import { TaskDTO } from './dto/tasks.dto';
+import { Request, Response, response } from 'express';
+import { TaskDTO, UpdateTaskDTO } from './dto/tasks.dto';
 import { TaskState, User } from '@prisma/client';
 
 @Controller('tasks')
@@ -58,5 +59,23 @@ export class TaskController {
     const taskUpdate = await this.taskService.updateTaskState(query, taskId);
 
     return response.json(taskUpdate);
+  }
+
+  @Patch('/:taskId')
+  @HttpCode(HttpStatus.OK)
+  async updateTask(
+    @Param('taskId') taskId: string,
+    @Res() response: Response,
+    @Body() data: UpdateTaskDTO,
+  ): Promise<Response<UpdateTaskDTO>> {
+    const taskUpdate = await this.taskService.updateTask(data, taskId);
+
+    return response.json(taskUpdate);
+  }
+
+  @Delete('/:taskId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteTask(@Param('taskId') taskId: string): Promise<void> {
+    return await this.taskService.deleteTask(taskId);
   }
 }

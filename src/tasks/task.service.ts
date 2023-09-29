@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { TaskDTO } from './dto/tasks.dto';
+import { TaskDTO, UpdateTaskDTO } from './dto/tasks.dto';
 import { Prisma, TaskState } from '@prisma/client';
 import { randomUUID } from 'crypto';
 
@@ -63,5 +63,29 @@ export class TasksService {
     });
 
     return taskUpdated;
+  }
+
+  async updateTask(
+    data: UpdateTaskDTO,
+    taskId: string,
+  ): Promise<UpdateTaskDTO> {
+    const taskUpdated = await this.prisma.task.update({
+      where: {
+        id: taskId,
+      },
+      data,
+    });
+
+    return taskUpdated;
+  }
+
+  async deleteTask(taskId: string): Promise<void> {
+    await this.prisma.task.delete({
+      where: {
+        id: taskId,
+      },
+    });
+
+    return;
   }
 }
