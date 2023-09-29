@@ -10,6 +10,7 @@ import {
   Query,
   Param,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { TasksService } from './task.service';
 import { Request, Response, response } from 'express';
@@ -70,5 +71,11 @@ export class TaskController {
     const taskUpdate = await this.taskService.updateTask(data, taskId);
 
     return response.json(taskUpdate);
+  }
+
+  @Delete('/:taskId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteTask(@Param('taskId') taskId: string): Promise<void> {
+    return await this.taskService.deleteTask(taskId);
   }
 }
