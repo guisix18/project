@@ -16,9 +16,13 @@ import { VerifyTaskIdMiddleware } from './middlewares/verifyTaskId.middleware';
 })
 export class TaskModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(VerifyTaskIdMiddleware).forRoutes({
-      path: 'tasks/update/:taskId',
-      method: RequestMethod.PATCH,
-    });
+    consumer.apply(VerifyTaskIdMiddleware).forRoutes(
+      {
+        path: 'tasks/update/:taskId',
+        method: RequestMethod.PATCH,
+      },
+      { path: 'tasks/:taskId', method: RequestMethod.PATCH },
+      { path: 'tasks/:taskId', method: RequestMethod.DELETE },
+    );
   }
 }
