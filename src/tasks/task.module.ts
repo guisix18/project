@@ -8,9 +8,16 @@ import { TaskController } from './task.controller';
 import { TasksService } from './task.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { VerifyTaskIdMiddleware } from './middlewares/verifyTaskId.middleware';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [
+    PrismaModule,
+    JwtModule.register({
+      secret: process.env.JWT_PAGINATION,
+      signOptions: { expiresIn: '1d' },
+    }),
+  ],
   controllers: [TaskController],
   providers: [TasksService],
 })
