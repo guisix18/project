@@ -38,13 +38,13 @@ export class TaskController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async listUserTasks(
-    @Query('progress') query: TaskState,
+    @Query() filters: TaskDTO,
     @Req() request: Request,
     @Res() response: Response,
   ): Promise<Response<TaskDTO[]>> {
     const { id } = request.user as User;
 
-    const userTasks = await this.taskService.listUserTasks(id, query);
+    const userTasks = await this.taskService.listUserTasks(id, filters);
 
     return response.json(userTasks);
   }
