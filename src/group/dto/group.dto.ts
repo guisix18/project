@@ -1,3 +1,4 @@
+import { OmitType } from '@nestjs/swagger';
 import {
   IsInstance,
   IsNotEmpty,
@@ -16,3 +17,5 @@ export class GroupDTO {
 
   tasks?: TaskDTO[];
 }
+
+export class UpdateGroupDTO extends OmitType(GroupDTO, ['tasks']) {}
